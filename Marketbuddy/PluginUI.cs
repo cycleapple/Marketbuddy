@@ -58,12 +58,12 @@ namespace Marketbuddy
                     ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse |
                     ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBackground))
             {
-                if (ImGui.Checkbox("Limit stack size to ", ref conf.UseMaxStackSize))
+                if (ImGui.Checkbox("限制每組數量為##Limit stack size overlay", ref conf.UseMaxStackSize))
                     conf.Save();
 
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth(30);
-                if (ImGui.InputInt("items", ref conf.MaximumStackSize, 0))
+                if (ImGui.InputInt("個##items overlay", ref conf.MaximumStackSize, 0))
                     MaximumStackSizeChanged();
 
                 ImGui.SameLine();
@@ -85,7 +85,7 @@ namespace Marketbuddy
                 ImGui.SetNextItemWidth(40);
                 DrawUndercutTypeSelector();
                 ImGui.SameLine();
-                ImGui.Text("undercut");
+                ImGui.Text("降價");
             }
 
             ImGui.PopStyleVar(5);
@@ -96,7 +96,7 @@ namespace Marketbuddy
         {
             if (!SettingsVisible) return;
 
-            if (!ImGui.Begin("Marketbuddy config", ref _settingsVisible,
+            if (!ImGui.Begin("Marketbuddy 設定##Marketbuddy config", ref _settingsVisible,
                     ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                     ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.AlwaysAutoResize))
             {
@@ -107,37 +107,37 @@ namespace Marketbuddy
             if(IPCManager.Locks.Count > 0)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudRed);
-                ImGui.TextWrapped($"Lock commands has been received from these plugins and Marketbuddy operation is fully halted:");
+                ImGui.TextWrapped("已收到下列插件的鎖定指令，Marketbuddy 的操作已完全暫停：");
                 ImGui.TextUnformatted($"{string.Join("\n", IPCManager.Locks)}");
-                if(ImGui.Button("Release locks"))
+                if(ImGui.Button("解除鎖定##Release locks"))
                 {
                     IPCManager.Locks.Clear();
                 }
                 ImGui.PopStyleColor();
             }
 
-            if (ImGui.Checkbox("Open current prices list when adjusting a price", ref conf.AutoOpenComparePrices))
+            if (ImGui.Checkbox("調整價格時開啟目前價格清單##Open current prices list when adjusting a price", ref conf.AutoOpenComparePrices))
                 conf.Save();
 
             DrawNestIndicator(1);
             if (ImGui.Checkbox(
-                    $"Holding SHIFT {(conf.AutoOpenComparePrices ? "prevents the above" : "does the above")}",
+                    $"按住 SHIFT 時{(conf.AutoOpenComparePrices ? "不執行上述操作" : "執行上述操作")}##Hold SHIFT price list",
                     ref conf.HoldShiftToStop))
                 conf.Save();
 
 
             ImGui.Spacing();
-            if (ImGui.Checkbox("Holding CTRL pastes a price from the clipboard and confirms it",
+            if (ImGui.Checkbox("按住 CTRL 時貼上剪貼簿中的價格並確認##Holding CTRL pastes a price from the clipboard and confirms it",
                     ref conf.HoldCtrlToPaste))
                 conf.Save();
 
             ImGui.Spacing();
-            if (ImGui.Checkbox("Open price history together with current prices list", ref conf.AutoOpenHistory))
+            if (ImGui.Checkbox("開啟目前價格清單時一併開啟價格歷史##Open price history together with current prices list", ref conf.AutoOpenHistory))
                 conf.Save();
 
 
             DrawNestIndicator(1);
-            if (ImGui.Checkbox($"Holding ALT {(conf.AutoOpenHistory ? "prevents the above" : "does the above")}",
+            if (ImGui.Checkbox($"按住 ALT 時{(conf.AutoOpenHistory ? "不執行上述操作" : "執行上述操作")}##Hold ALT price history",
                     ref conf.HoldAltHistoryHandling))
                 conf.Save();
 
@@ -157,17 +157,17 @@ namespace Marketbuddy
             ImGui.SetNextItemWidth(55);
             DrawUndercutTypeSelector();
             ImGui.SameLine();
-            ImGui.TextUnformatted("undercut over the selected price");
+            ImGui.TextUnformatted("低於所選價格");
 
             DrawNestIndicator(1);
             if (ImGui.Checkbox(
-                    $"Clicking a price copies that price with a {GetUndercutText()} undercut to the clipboard",
+                    $"點擊價格時，將比該價格低 {GetUndercutText()} 的價格複製到剪貼簿##Copy undercut price",
                     ref conf.SaveToClipboard))
                 conf.Save();
 
             DrawNestIndicator(1);
             if (ImGui.Checkbox(
-                    $"Clicking a price sets your price as that price with a {GetUndercutText()} undercut",
+                    $"點擊價格時，將自己的價格設為比該價格低 {GetUndercutText()}##Set undercut price",
                     ref conf.AutoInputNewPrice))
             {
                 if (!conf.AutoInputNewPrice)
@@ -178,7 +178,7 @@ namespace Marketbuddy
             DrawNestIndicator(2);
             if (!conf.AutoInputNewPrice) PushStyleDisabled();
             if (ImGui.Checkbox(
-                    "Closes the price list and confirms the new price after selecting it from the list",
+                    "從清單選擇價格後，關閉價格清單並確認新價格##Confirm selected price",
                     ref conf.AutoConfirmNewPrice))
             {
                 if (!conf.AutoInputNewPrice)
@@ -189,23 +189,23 @@ namespace Marketbuddy
             if (!conf.AutoInputNewPrice) PopStyleDisabled();
 
             ImGui.Spacing();
-            if (ImGui.Checkbox("Limit stack size to", ref conf.UseMaxStackSize))
+            if (ImGui.Checkbox("限制每組數量為##Limit stack size", ref conf.UseMaxStackSize))
                 conf.Save();
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth(45);
-            if (ImGui.InputInt("items", ref conf.MaximumStackSize, 0))
+            if (ImGui.InputInt("個##items", ref conf.MaximumStackSize, 0))
                 MaximumStackSizeChanged();
 
             DrawNestIndicator(1);
-            if (ImGui.Checkbox("Adjust maximum stack size in retainer sell list UI",
+            if (ImGui.Checkbox("在雇員出售清單介面調整每組數量上限##Adjust maximum stack size in retainer sell list UI",
                     ref conf.AdjustMaxStackSizeInSellList))
                 conf.Save();
 
             if (conf.AdjustMaxStackSizeInSellList)
             {
                 DrawNestIndicator(2);
-                if (ImGui.DragFloat2("Position (relative to top left)", ref conf.AdjustMaxStackSizeInSellListOffset,
+                if (ImGui.DragFloat2("位置（相對於左上角）##Position relative to top left", ref conf.AdjustMaxStackSizeInSellListOffset,
                         1f, 1, float.MaxValue, "%.0f"))
                     conf.Save();
             }
@@ -217,8 +217,8 @@ namespace Marketbuddy
         {
             if (ImGui.BeginCombo("##undercuttype", conf.UndercutUsePercent ? "%" : "gil"))
             {
-                if (ImGui.Selectable("Fixed gil undercut")) conf.UndercutUsePercent = false;
-                if (ImGui.Selectable("Percentage undercut")) conf.UndercutUsePercent = true;
+                if (ImGui.Selectable("固定金額降價##Fixed gil undercut")) conf.UndercutUsePercent = false;
+                if (ImGui.Selectable("依百分比降價##Percentage undercut")) conf.UndercutUsePercent = true;
                 ImGui.EndCombo();
             }
         }
