@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -116,7 +116,7 @@ namespace Marketbuddy
         {
             var eventArgs = (AddonReceiveEventArgs)args;
             var eventType = eventArgs.AtkEventType;
-            var nodeParam = eventArgs.Data;
+            var nodeParam = eventArgs.AtkEventData;
             if (!IPCManager.IsLocked)
             {
                 if (conf.AutoInputNewPrice || conf.SaveToClipboard)
